@@ -3,7 +3,6 @@ import Searchbar from './Searchbar/Searchbar';
 import { fetchImages } from './services/api';
 import ImageGallery from './ImageGallery/ImageGallery';
 import Button from './Button/Button';
-import { ToastContainer, toast } from 'react-toastify';
 import Loader from './Loader/Loader';
 import { animateScroll } from 'react-scroll';
 import 'react-toastify/dist/ReactToastify.css';
@@ -18,7 +17,6 @@ const Status = {
 const App = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [images, setImages] = useState([]);
-  const [error, setError] = useState(null);
   const [status, setStatus] = useState(Status.IDLE);
   const [page, setPage] = useState(1);
   const [per_page] = useState(12);
@@ -33,14 +31,13 @@ const App = () => {
         const { hits, totalHits } = await fetchImages(searchQuery, page);
         if (!hits.length) {
           setLoadMore(false);
-          toast.info('Nothing was found for your request. Try something else');
+         
         } else {
           setImages((prevImages) => [...prevImages, ...hits]);
           setLoadMore(page < Math.ceil(totalHits / per_page));
           setStatus(Status.RESOLVED);
         }
       } catch (error) {
-        setError(error.message);
         setStatus(Status.REJECTED);
       }
     };
@@ -86,7 +83,6 @@ const App = () => {
           {hasMoreImages && <Button onloadMore={onloadMore} hasMoreImages={hasMoreImages} />}
         </>
       )}
-      <ToastContainer autoClose={3000} />
     </>
   );
 };

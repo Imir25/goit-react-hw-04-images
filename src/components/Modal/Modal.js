@@ -6,12 +6,6 @@ import PropTypes from 'prop-types';
 const modalRoot = document.querySelector('#modal-root');
 
 const Modal = ({ tags, largeImageURL, closeModal }) => {
-  const handleKeyDown = (e) => {
-    if (e.code === 'Escape') {
-      closeModal();
-    }
-  };
-
   const handleBackdropClick = (e) => {
     if (e.target !== e.currentTarget) {
       closeModal();

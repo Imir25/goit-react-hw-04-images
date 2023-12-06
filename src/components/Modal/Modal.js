@@ -19,6 +19,12 @@ const Modal = ({ tags, largeImageURL, closeModal }) => {
   };
 
   useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.code === 'Escape') {
+        closeModal();
+      }
+    };
+
     document.addEventListener('keydown', handleKeyDown);
 
     return () => {

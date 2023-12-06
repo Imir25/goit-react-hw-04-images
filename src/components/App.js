@@ -23,15 +23,15 @@ const App = () => {
   const [loadMore, setLoadMore] = useState(false);
 
   useEffect(() => {
-    const getImages = async () => {
-      setStatus(Status.PENDING);
-      if (!searchQuery) return;
+    if (!searchQuery) return;
 
+    const getImages = async () => {
       try {
+        setStatus(Status.PENDING);
+
         const { hits, totalHits } = await fetchImages(searchQuery, page);
         if (!hits.length) {
           setLoadMore(false);
-         
         } else {
           setImages((prevImages) => [...prevImages, ...hits]);
           setLoadMore(page < Math.ceil(totalHits / per_page));
@@ -69,9 +69,9 @@ const App = () => {
   return (
     <>
       <Searchbar onSubmitImage={hangleFormSubmit} />
-      {status === Status.IDLE && null}
-
       {status === Status.PENDING && <Loader />}
+
+      {status === Status.IDLE && null}
 
       {status === Status.REJECTED && (
         <p>Something happened. Please refresh the page and try again.</p>

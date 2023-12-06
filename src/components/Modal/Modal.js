@@ -1,47 +1,45 @@
-import React, { Component } from 'react';
+import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import css from './Modal.module.css';
 import PropTypes from 'prop-types';
 
 const modalRoot = document.querySelector('#modal-root');
 
-class Modal extends Component {
-    componentDidMount() {
-        document.addEventListener('keydown', this.handleKeyDown);
+const Modal = ({ tags, largeImageURL, closeModal }) => {
+  const handleKeyDown = (e) => {
+    if (e.code === 'Escape') {
+      closeModal();
     }
+  };
 
-    componentWillUnmount() {
-        document.removeEventListener('keydown', this.handleKeyDown);
+  const handleBackdropClick = (e) => {
+    if (e.target !== e.currentTarget) {
+      closeModal();
     }
+  };
 
-    handleKeyDown = (e) => {
-        if (e.code === 'Escape') {
-            this.props.closeModal();
-        }
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
     };
+  }, [closeModal]);
 
-    handleBackdropClick = (e) => {
-        if (e.target !== e.currentTarget) {
-            this.props.closeModal();
-        }
-    };
-
-    render() {
-        const { tags, largeImageURL } = this.props;
-        return createPortal(
-            <div className={css.overlay} onClick={this.handleBackdropClick}>
-                <div className={css.modal}>
-                    <img src={largeImageURL} alt={tags} />
-                </div>
-            </div>,
-            modalRoot
-        );
-    }
-}
+  return createPortal(
+    <div className={css.overlay} onClick={handleBackdropClick}>
+      <div className={css.modal}>
+        <img src={largeImageURL} alt={tags} />
+      </div>
+    </div>,
+    modalRoot
+  );
+};
 
 Modal.propTypes = {
-    tags: PropTypes.string.isRequired,
-    largeImageURL: PropTypes.string.isRequired,
+  tags: PropTypes.string.isRequired,
+  largeImageURL: PropTypes.string.isRequired,
+  closeModal: PropTypes.func.isRequired,
 };
 
 export default Modal;
